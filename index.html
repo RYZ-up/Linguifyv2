@@ -2828,7 +2828,28 @@
     html:not([data-mode="halloween"]) header .btn3d.btn-logo:not(:disabled):hover .bt { transform: rotate(-3deg) scale(1.06); animation: none; }
     html:not([data-mode="halloween"]) header .btn3d.btn-logo:not(:disabled):active .bt { transform: rotate(-3deg) scale(.96); }
     @media (max-width: 420px) { html:not([data-mode="halloween"]) header .btn-online .hdr-lbl, html:not([data-mode="halloween"]) header .btn-online .bt i { display: none; } html:not([data-mode="halloween"]) header .header-r { gap: .35rem; } html:not([data-mode="halloween"]) header .btn-online .bt { padding: 0 .55rem; } html:not([data-mode="halloween"]) header .btn3d.btn-logo .bt { font-size: 1.35rem; -webkit-text-stroke: 5px var(--b-ink); } }
-    @media (max-width: 340px) { html:not([data-mode="halloween"]) header .btn3d { --btn-h: 2.2rem; } html:not([data-mode="halloween"]) header .header-r { gap: .3rem; } html:not([data-mode="halloween"]) header #hdr-online { display: none; } }
+    @media (max-width: 340px) { html:not([data-mode="halloween"]) header .btn3d { --btn-h: 2.2rem; } html:not([data-mode="halloween"]) header .header-r { gap: .3rem; } html:not([data-mode="halloween"]) header #btn-github { display: none; } html:not([data-mode="halloween"]) header .btn-online .bt { padding: 0 .4rem; gap: .2rem; font-size: 1rem; } html:not([data-mode="halloween"]) header .btn-online .on-dot { display: none; } html:not([data-mode="halloween"]) header .btn3d.btn-logo .bt { font-size: 1.15rem; -webkit-text-stroke: 4px var(--b-ink); padding: 0; } }
+    @media (max-width: 270px) { html:not([data-mode="halloween"]) header .btn3d { --btn-h: 2rem; } html:not([data-mode="halloween"]) header .header-r { gap: .2rem; } html:not([data-mode="halloween"]) header .btn-online .bt i { display: none !important; } }
+    /* Mobile : l'icône du compteur reste visible */
+    @media (max-width: 420px) { html:not([data-mode="halloween"]) header .btn-online .bt i { display: inline-block; } }
+    /* Proposition de niveau : détachée des boutons du dessous */
+    html:not([data-mode="halloween"]) #lvl-up { margin: 0 0 1rem; }
+    /* Résultats compacts : Rejouer visible sans défiler */
+    @media (max-width: 600px), (max-height: 760px) {
+      #s-results .card3d-in { padding: 1rem 1rem 1rem !important; }
+      #s-results .res-lbl { margin-bottom: .2rem; }
+      html:not([data-mode="halloween"]) #s-results .res-score, #s-results .res-score { font-size: clamp(2.8rem, 13vw, 4rem); }
+      #s-results .res-sub { margin-bottom: .5rem; }
+      #s-results .res-record-card { margin: 0 auto .6rem; gap: .35rem; }
+      #s-results .stats-row { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .35rem; margin-bottom: .7rem; }
+      #s-results .stat { padding: .4rem .2rem; }
+      #s-results .stat-v { font-size: 1rem; }
+      #s-results .stat-l { font-size: .52rem; letter-spacing: .02em; }
+      #s-results #lvl-up { padding: .5rem .7rem; gap: .35rem; margin-bottom: .7rem; }
+      #s-results #lvl-up p { font-size: .78rem; }
+      #s-results .res-actions { margin-bottom: .6rem; }
+      #s-results .res-actions kbd { display: none; }
+    }
     html:not([data-mode="halloween"]) .btn-user.guest { opacity: 1; }
     html:not([data-mode="halloween"]) .btn-user.guest .bt { color: #fff; }
     /* Consigne de la carte : intégrée au bleu (texte clair), plus de pastille jaune */
@@ -4184,7 +4205,7 @@
     /* Jouer : l'écran de jeu s'ouvre tout de suite, la phrase arrive dès que le serveur répond */
     function showGameLoading() {
       document.getElementById('p-txt').textContent = 'Chargement…';
-      const input = document.getElementById('ans-input'); input.value = ''; input.readOnly = true;
+      const input = document.getElementById('ans-input'); input.value = ''; ansKept = ''; input.dataset.lock = '1';
       showScreen('s-game');
     }
     async function guestLogin() {
@@ -4321,7 +4342,7 @@
       gLoading = true;
       try {
         gWaiting = false;
-        const inp = document.getElementById('ans-input'); inp.readOnly = true;
+        const inp = document.getElementById('ans-input'); inp.dataset.lock = '1';
         gIdx++;
         if (gSettings.mode === 'count') setPbar(gIdx, gPhrases.length);
         if (gIdx >= gPhrases.length) { await endGame(); return; }
@@ -4332,6 +4353,7 @@
         await loadPhrase(gIdx);
       } finally { gLoading = false; }
     }
+    let ansKept = '';
     let gStart = 0, gTimer = null, gCountdown = null, gTimeLeft = 0, gTotalSecs = 0, gWaiting = false, gStreak = 0, gStreakMax = 0, gCompletedStreaks = 0;
     const STREAK_FULL = 10;
 
@@ -4407,7 +4429,7 @@
       el.textContent = gPhrases[idx].en;
       document.getElementById('g-cnt').textContent = gSettings.mode === 'time' ? `Q${idx + 1}` : `${idx + 1} / ${gPhrases.length}`;
       const inp = document.getElementById('ans-input');
-      inp.value = ''; inp.readOnly = false;
+      inp.value = ''; ansKept = ''; delete inp.dataset.lock;
       inp.style.height = 'auto';
       autoGrowInput(inp);
       
@@ -4429,7 +4451,7 @@
     async function validate() {
       if (gEnding || gLoading) return;
       if (gWaiting) { autoNext(); return; }
-      if (document.getElementById('ans-input').readOnly) return;
+      if (document.getElementById('ans-input').dataset.lock) return;
       const raw = document.getElementById('ans-input').value.trim();
       if (!raw) {
         const wrap = document.getElementById('ans-input').closest('.inp3d');
@@ -4438,7 +4460,7 @@
       }
       const ms = Math.max(500, Math.round(performance.now() - gQStart));
       // Lecture seule plutôt que désactivé : le champ garde le focus, le clavier mobile reste ouvert jusqu'à la phrase suivante
-      document.getElementById('ans-input').readOnly = true;
+      document.getElementById('ans-input').dataset.lock = '1'; ansKept = document.getElementById('ans-input').value;
       const phrase = gPhrases[gIdx];
       // Réponse exacte : reconnue tout de suite par son empreinte. Sinon le serveur tranche (fautes, IA).
       // Dans les deux cas le serveur fige la réponse et renvoie la bonne ; il recalcule seul le score.
@@ -4762,7 +4784,24 @@
 
     document.getElementById('btn-val').addEventListener('click', validate);
     // Rien ne s'écrit entre deux questions (vérification, correction affichée, transition)
-    document.getElementById('ans-input').addEventListener('beforeinput', e => { if (e.target.readOnly || gWaiting || gLoading) e.preventDefault(); });
+    // Verrou sans readOnly ni disabled : le champ garde le focus, le clavier mobile ne se ferme jamais pendant la partie
+    const ansLocked = el => !!el.dataset.lock || gWaiting || gLoading;
+    document.getElementById('ans-input').addEventListener('beforeinput', e => { if (ansLocked(e.target)) e.preventDefault(); });
+    // Android (composition) ignore preventDefault : on rétablit le texte figé
+    document.getElementById('ans-input').addEventListener('input', e => {
+      if (ansLocked(e.target)) { if (e.target.value !== ansKept) e.target.value = ansKept; e.stopImmediatePropagation(); }
+      else ansKept = e.target.value;
+    }, true);
+    // Toucher un bouton de la partie ne retire pas le focus du champ
+    document.querySelectorAll('#btn-val, #g-timer').forEach(b => b.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') e.preventDefault(); }));
+    document.getElementById('ans-input').addEventListener('blur', () => {
+      setTimeout(() => {
+        const inp = document.getElementById('ans-input');
+        if (document.querySelector('.screen.active')?.id !== 's-game' || !gSessionId || document.getElementById('quit-modal').classList.contains('open') || settingsOpen || panelOpen) return;
+        if (document.activeElement && document.activeElement !== document.body && document.activeElement !== inp) return;
+        inp.focus({ preventScroll: true });
+      }, 0);
+    });
     document.getElementById('ans-input').addEventListener('keydown', e => {
       if (e.repeat && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); return; }
       if (e.key === 'Enter') { e.preventDefault(); validate(); return; }
@@ -4836,10 +4875,10 @@
       else document.getElementById('live-trans').innerHTML = '';
       // Réponse exacte (aux accents, à la casse et à la ponctuation près) : validée sans appuyer sur Entrée.
       const phrase = gPhrases[gIdx];
-      if (gSettings.autoValidate && !gWaiting && !this.readOnly && phrase) {
+      if (gSettings.autoValidate && !gWaiting && !this.dataset.lock && phrase) {
         const el = this, value = this.value, idx = gIdx;
         window.answerCheck.answerKey(gSalt, idx, value, gSettings.direction).then(key => {
-          if (key && gIdx === idx && el.value === value && !gWaiting && !el.readOnly && (phrase.keys || []).includes(key)) validate();
+          if (key && gIdx === idx && el.value === value && !gWaiting && !el.dataset.lock && (phrase.keys || []).includes(key)) validate();
         });
       }
     });

@@ -58,7 +58,7 @@ const overflow = () => {
 };
 
 const failures = [];
-for (const [w, h] of [[280, 600], [320, 568], [360, 740], [414, 896], [568, 320]]) {
+for (const [w, h] of [[240, 520], [280, 600], [320, 568], [360, 640], [375, 667], [390, 844], [414, 896], [568, 320], [768, 1024], [1440, 900]]) {
   const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1, hasTouch: true, isMobile: true });
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -137,10 +137,17 @@ for (const [w, h] of [[280, 600], [320, 568], [360, 740], [414, 896], [568, 320]
   await page.locator('#btn-val').click();
   await page.waitForFunction(() => document.getElementById('s-results').classList.contains('active'));
   await check('results');
+  // Rejouer accessible sans défiler, même avec la proposition de niveau affichée
+  await page.evaluate(() => { document.getElementById('lvl-up').hidden = false; });
+  await page.waitForTimeout(1600);
+  if (h >= 560) {
+    const bottom = await page.evaluate(() => document.getElementById('btn-replay').getBoundingClientRect().bottom - innerHeight);
+    if (bottom > 0) failures.push(`${w}x${h} results: Rejouer ${Math.round(bottom)}px sous l'écran`);
+  }
   if (errors.length) failures.push(`${w}x${h} errors: ${errors.join(' | ')}`);
   await page.close();
 }
 await browser.close();
 server.close();
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log('Responsive checks passed at 280, 320, 360, 414 px and landscape: tutorial, weekly leaderboard with disclosed simulated rivals and rank, account, settings, game, results.');
+console.log('Responsive checks passed from 240 to 1440 px and landscape: tutorial, weekly leaderboard with disclosed simulated rivals and rank, account, settings, game, results.');
