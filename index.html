@@ -1456,6 +1456,7 @@
     /* ════════ Game screen ════════ */
     #s-game {
       justify-content: flex-start;
+      overflow-x: clip;
     }
 
     .game-inner {
@@ -2654,8 +2655,9 @@
     html:not([data-mode="halloween"]) .p-lbl { width: fit-content; opacity: 1; font-size: 1rem; color: var(--b-ink); text-transform: none; letter-spacing: .03em; text-shadow: none;
       background: var(--b-yel); border: 3px solid var(--b-ink); border-radius: 6px; padding: .15rem .6rem; box-shadow: 0 3px 0 var(--b-ink); }
     html:not([data-mode="halloween"]) .p-txt { font-family: var(--b-font); font-weight: 400; color: #fff; letter-spacing: .02em; }
-    html:not([data-mode="halloween"]) .phrase-card.pop-ok { box-shadow: 0 6px 0 var(--b-ink), 0 0 0 4px var(--b-green), 0 0 30px rgba(63, 217, 74, .7), inset 0 3px 0 rgba(255, 255, 255, .35); }
-    html:not([data-mode="halloween"]) .phrase-card.pop-ko { box-shadow: 0 6px 0 var(--b-ink), 0 0 0 4px #ff5a4a, 0 0 30px rgba(255, 70, 60, .6), inset 0 3px 0 rgba(255, 255, 255, .35); }
+    html:not([data-mode="halloween"]) .phrase-card { transition: box-shadow .2s ease; }
+    html:not([data-mode="halloween"]) .phrase-card.pop-ok { box-shadow: 0 6px 0 var(--b-ink), 0 0 0 4px var(--b-green), 0 6px 0 4px var(--b-green), inset 0 3px 0 rgba(255, 255, 255, .35); }
+    html:not([data-mode="halloween"]) .phrase-card.pop-ko { box-shadow: 0 6px 0 var(--b-ink), 0 0 0 4px #ff5a4a, 0 6px 0 4px #ff5a4a, inset 0 3px 0 rgba(255, 255, 255, .35); }
 
     /* Résultats */
     html:not([data-mode="halloween"]) .res-lbl { font-size: 1.1rem; color: #fff; text-transform: uppercase; }
@@ -2814,7 +2816,8 @@
     html:not([data-mode="halloween"]) header .btn-online .bt { width: auto; gap: .35rem; padding: 0 .7rem; font: 400 1.15rem var(--b-font); color: #fff; -webkit-text-stroke: 4px var(--b-ink); paint-order: stroke fill; text-shadow: 0 2px 0 var(--b-ink); }
     html:not([data-mode="halloween"]) header .btn-online .bt i { font-size: .8em; -webkit-text-stroke: 0; filter: drop-shadow(0 2px 0 var(--b-ink)); }
     html:not([data-mode="halloween"]) header .btn-online .on-dot { border: 2px solid var(--b-ink); width: .7rem; height: .7rem; }
-    html:not([data-mode="halloween"]) header .btn-online .hdr-lbl { display: inline; font-size: .85rem; }
+    html:not([data-mode="halloween"]) header .btn-online #online-n { font-size: 1.3rem; color: #fff; font-variant-numeric: tabular-nums; min-width: 2ch; text-align: right; }
+    html:not([data-mode="halloween"]) header .btn-online .hdr-lbl { display: inline; overflow: visible; max-width: none; white-space: nowrap; padding-bottom: .15em; font: 400 .95rem/1.4 var(--b-font); color: #fff; -webkit-text-stroke: 3px var(--b-ink); paint-order: stroke fill; text-shadow: 0 2px 0 var(--b-ink); letter-spacing: .02em; }
     html:not([data-mode="halloween"]) header .btn-online:hover .bt { animation: none; transform: none; }
     html:not([data-mode="halloween"]) header a.btn3d { text-decoration: none; }
     html:not([data-mode="halloween"]) header .btn3d.btn-logo { --bol: transparent; background: none; box-shadow: none; }
@@ -2844,17 +2847,18 @@
       background: radial-gradient(50% 60% at 30% 60%, rgba(200, 170, 255, .22), transparent 70%), radial-gradient(45% 55% at 75% 50%, rgba(200, 170, 255, .18), transparent 70%); }
     @keyframes wFog { to { transform: translateX(6%); } }
     html:not([data-mode="halloween"]) .w-stars { position: absolute; inset: 0; }
-    html:not([data-mode="halloween"]) .w-bat { position: absolute; left: 0; aspect-ratio: 2; pointer-events: none; animation: wBatFly 9s linear both; will-change: transform; filter: drop-shadow(0 0 6px rgba(255, 220, 140, .25)); }
+    html:not([data-mode="halloween"]) .w-bat { position: absolute; left: 0; aspect-ratio: 100 / 34; pointer-events: none; animation: wBatFly 9s linear both; will-change: transform; }
     html:not([data-mode="halloween"]) .w-bat.rtl { animation-name: wBatFlyBack; }
-    html:not([data-mode="halloween"]) .w-bat svg { width: 100%; height: 100%; fill: #12051f; overflow: visible; animation: wBatBob 1.6s ease-in-out infinite alternate; }
-    html:not([data-mode="halloween"]) .w-bat.rtl svg { transform: scaleX(-1); }
-    html:not([data-mode="halloween"]) .w-bat .w-bat-eye { fill: #ffcf4a; }
-    html:not([data-mode="halloween"]) .w-bat-l, html:not([data-mode="halloween"]) .w-bat-r { transform-box: view-box; animation: wBatFlap var(--flap, .22s) ease-in-out infinite alternate; }
-    html:not([data-mode="halloween"]) .w-bat-l { transform-origin: 46% 44%; } html:not([data-mode="halloween"]) .w-bat-r { transform-origin: 54% 44%; }
-    @keyframes wBatFly { from { transform: translateX(-14vw); } to { transform: translateX(114vw); } }
-    @keyframes wBatFlyBack { from { transform: translateX(114vw); } to { transform: translateX(-14vw); } }
-    @keyframes wBatBob { 0% { translate: 0 -14px; rotate: -4deg; } 50% { translate: 0 6px; rotate: 3deg; } 100% { translate: 0 14px; rotate: -2deg; } }
-    @keyframes wBatFlap { 0% { transform: scaleY(1) rotate(0deg); } 100% { transform: scaleY(-.25) rotate(0deg); } }
+    html:not([data-mode="halloween"]) .w-bat svg { width: 100%; height: 100%; fill: #1c0f30; overflow: visible; animation: wBatBob 2.4s ease-in-out infinite alternate; }
+    html:not([data-mode="halloween"]) .w-bat.rtl svg { scale: -1 1; }
+    html:not([data-mode="halloween"]) .w-bat-l, html:not([data-mode="halloween"]) .w-bat-r { transform-box: view-box; animation: wBatFlapL var(--flap, .3s) cubic-bezier(.5,0,.3,1) infinite alternate; }
+    html:not([data-mode="halloween"]) .w-bat-l { transform-origin: 46px 16px; }
+    html:not([data-mode="halloween"]) .w-bat-r { transform-origin: 54px 16px; animation-name: wBatFlapR; }
+    @keyframes wBatFly { from { transform: translateX(-10vw); } to { transform: translateX(110vw); } }
+    @keyframes wBatFlyBack { from { transform: translateX(110vw); } to { transform: translateX(-10vw); } }
+    @keyframes wBatBob { from { translate: 0 -6px; rotate: -3deg; } to { translate: 0 6px; rotate: 3deg; } }
+    @keyframes wBatFlapL { from { transform: rotate(22deg); } to { transform: rotate(-28deg) scaleY(.55); } }
+    @keyframes wBatFlapR { from { transform: rotate(-22deg); } to { transform: rotate(28deg) scaleY(.55); } }
     html[data-mode="halloween"] .w-bat { display: none; }
     html:not([data-mode="halloween"]) .w-stars i { position: absolute; border-radius: 50%; background: #fff; box-shadow: 0 0 6px #fff; animation: wStar 3s ease-in-out infinite; }
     @keyframes wStar { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
@@ -2904,6 +2908,7 @@
     @keyframes bDrop { 0% { transform: translateY(-40px) scale(.9); opacity: 0; } 100% { transform: none; opacity: 1; } }
     html:not([data-mode="halloween"]) .phrase-card.pop-ok { animation: bYes .5s cubic-bezier(.34, 2, .5, 1); }
     html:not([data-mode="halloween"]) .phrase-card.pop-ko { animation: bNo .45s ease; }
+    .phrase-card.p-in, .phrase-card.pop-ok, .phrase-card.pop-ko { animation: none !important; }
     @keyframes bYes { 0% { transform: scale(1); } 40% { transform: scale(1.08) rotate(-1.5deg); } 100% { transform: scale(1); } }
     @keyframes bNo { 0%, 100% { transform: none; } 20% { transform: translateX(-12px) rotate(-2deg); } 40% { transform: translateX(10px) rotate(2deg); } 60% { transform: translateX(-7px); } 80% { transform: translateX(4px); } }
     html:not([data-mode="halloween"]) .g-timer i { display: inline-block; animation: bTick 1s steps(1) infinite; }
@@ -2947,7 +2952,7 @@
       <div class="btn3d btn-online" id="hdr-online" data-pi style="--pi-d:30ms" title="Joueurs en ligne (IA comprises)" aria-label="Joueurs en ligne, IA comprises">
         <span class="bt"><span class="on-dot"></span><i class="fa-solid fa-user-group"></i><b id="online-n">0</b><span class="hdr-lbl">en ligne</span></span>
       </div>
-      <a class="btn3d sq" id="btn-github" data-pi style="--pi-d:60ms" href="https://github.com/RYZ-up/linguify-game" target="_blank" rel="noopener noreferrer" title="Code source sur GitHub" aria-label="Code source sur GitHub"><span class="bt"><i class="fa-brands fa-github"></i></span></a>
+      <a class="btn3d sq" id="btn-github" data-pi style="--pi-d:60ms" href="https://github.com/RYZ-up/Linguifyv2" target="_blank" rel="noopener noreferrer" title="Code source sur GitHub" aria-label="Code source sur GitHub"><span class="bt"><i class="fa-brands fa-github"></i></span></a>
       <button class="btn3d sq" id="btn-tuto" style="display:none" title="Revoir le tutoriel"><span class="bt"><i class="fa-solid fa-question"></i></span></button>
       <button class="btn3d sq" id="btn-leaderboard" hidden data-pi style="--pi-d:90ms" title="Classement" aria-label="Classement"><span class="bt"><i class="fa-solid fa-trophy"></i><span class="hdr-lbl">Classement</span></span></button>
       <button class="btn3d sq" id="btn-settings-toggle" data-pi style="--pi-d:120ms" title="Paramètres">
@@ -3754,7 +3759,9 @@
     function autoGrowInput(el) {
       if (!el) return;
       el.style.height = 'auto';
-      const targetHeight = Math.min(el.scrollHeight, parseInt(getComputedStyle(el).maxHeight) || 200);
+      // scrollHeight n'inclut pas la bordure : sans elle, le bas du champ était coupé
+      const border = el.offsetHeight - el.clientHeight;
+      const targetHeight = Math.min(el.scrollHeight + border, parseInt(getComputedStyle(el).maxHeight) || 200);
       el.style.height = targetHeight + 'px';
       if (el.id === 'ans-input') {
         const btnVal = document.getElementById('btn-val');
@@ -3795,6 +3802,8 @@
         }
       };
       closePanel();
+      // Écran déjà affiché (chargement puis lancement de la partie) : rien ne disparaît ni ne réapparaît
+      if (document.getElementById(id).classList.contains('active')) return;
       /* startViewTransition utilisé uniquement comme verrou de frame, sans nommer d'éléments */
       if (document.startViewTransition) {
         const t = document.startViewTransition(doSwap);
@@ -4310,9 +4319,15 @@
       if (!gWaiting || gLoading || gEnding || !gSessionId) return;
       gLoading = true;
       try {
+        gWaiting = false;
+        const inp = document.getElementById('ans-input'); inp.readOnly = true;
         gIdx++;
         if (gSettings.mode === 'count') setPbar(gIdx, gPhrases.length);
         if (gIdx >= gPhrases.length) { await endGame(); return; }
+        document.getElementById('phrase-card').classList.remove('pop-ok', 'pop-ko');
+        // Carte balayée vers la droite, la suivante arrive de la gauche (loadPhrase)
+        await cardAnim([{ transform: 'none', opacity: 1 }, { transform: 'translateX(55%) rotate(5deg)', opacity: 0 }], 190, 'cubic-bezier(.5,0,.75,0)', 'forwards');
+        if (!gSessionId || gEnding) return;
         await loadPhrase(gIdx);
       } finally { gLoading = false; }
     }
@@ -4371,13 +4386,23 @@
       finally { gStarting = false; }
     }
 
+    /* Une seule animation à la fois sur la carte : toute animation en cours est annulée avant la suivante */
+    function cardAnim(frames, ms, easing, fill = 'none') {
+      const pc = document.getElementById('phrase-card');
+      pc.getAnimations().forEach(a => a.cancel());
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve();
+      return pc.animate(frames, { duration: ms, easing, fill }).finished.catch(() => {});
+    }
     async function loadPhrase(idx) {
       clearTimeout(autoNextTimer); autoNextTimer = null;
       const el = document.getElementById('p-txt');
       const pc = document.getElementById('phrase-card');
-      pc.classList.remove('pop-ok', 'pop-ko', 'p-in'); void pc.offsetWidth; pc.classList.add('p-in');
+      pc.classList.remove('pop-ok', 'pop-ko', 'p-in');
       el.className = 'p-txt';
-      el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'fadeUp .3s ease';
+      el.style.animation = 'none';
+      // Première phrase : la carte de chargement reste en place, seul le texte change
+      if (idx === 0) { pc.getAnimations().forEach(a => a.cancel()); void el.offsetWidth; el.style.animation = 'fadeUp .25s ease'; }
+      else cardAnim([{ transform: 'translateX(-55%) rotate(-5deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], 260, 'cubic-bezier(.2,.8,.3,1)');
       el.textContent = gPhrases[idx].en;
       document.getElementById('g-cnt').textContent = gSettings.mode === 'time' ? `Q${idx + 1}` : `${idx + 1} / ${gPhrases.length}`;
       const inp = document.getElementById('ans-input');
@@ -4442,6 +4467,7 @@
       playBip(ok, effectiveStreak);
       const ptxt = document.getElementById('p-txt');
       const card = document.getElementById('phrase-card');
+      card.getAnimations().forEach(a => a.cancel());
       card.classList.remove('pop-ok', 'pop-ko', 'p-in'); void card.offsetWidth;
       if (ok) {
         card.classList.add('pop-ok');
@@ -4449,20 +4475,12 @@
         showGameMascot(effectiveStreak >= 3 ? 'sleep' : 'love');
         showAnswerNotif(true);
         updateStreakMul();
-        if (effectiveStreak >= 4 && settings.streakShake) {
-          const si = Math.min(effectiveStreak - 3, 7);
-          const sd = (0.3 + si * 0.04).toFixed(2) + 's';
-          const shakeEl = document.querySelector('#s-game .game-inner') || document.body;
-          shakeEl.style.setProperty('--si', si);
-          shakeEl.style.setProperty('--sd', sd);
-          shakeEl.classList.remove('streak-shake'); void shakeEl.offsetWidth;
-          shakeEl.classList.add('streak-shake');
-          setTimeout(() => shakeEl.classList.remove('streak-shake'), parseFloat(sd) * 1000 + 50);
-        }
+        cardAnim([{ transform: 'scale(1)' }, { transform: 'scale(1.05)', offset: .4 }, { transform: 'scale(1)' }], 260, 'ease-out');
         gWaiting = true;
         if (gSettings.autoNext) autoNextTimer = setTimeout(autoNext, 250);
       } else {
         card.classList.add('pop-ko');
+        cardAnim([{ transform: 'none' }, { transform: 'translateX(-10px)', offset: .2 }, { transform: 'translateX(8px)', offset: .45 }, { transform: 'translateX(-4px)', offset: .7 }, { transform: 'none' }], 380, 'ease-out');
         haptic([35, 45, 35]);
         showGameMascot('laugh');
         ptxt.className = 'p-hint';
@@ -4732,7 +4750,10 @@
     document.getElementById('correction-backdrop').addEventListener('click', closeCorrectionPopup);
 
     document.getElementById('btn-val').addEventListener('click', validate);
+    // Rien ne s'écrit entre deux questions (vérification, correction affichée, transition)
+    document.getElementById('ans-input').addEventListener('beforeinput', e => { if (e.target.readOnly || gWaiting || gLoading) e.preventDefault(); });
     document.getElementById('ans-input').addEventListener('keydown', e => {
+      if (e.repeat && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); return; }
       if (e.key === 'Enter') { e.preventDefault(); validate(); return; }
       if (e.key === ' ' && gWaiting) { e.preventDefault(); autoNext(); }
     });
@@ -4741,7 +4762,7 @@
       const active = document.querySelector('.screen.active')?.id;
 
       /* Jeu : Enter/Space avance toujours quand on attend */
-      if (e.key === 'Enter' && gWaiting) { e.preventDefault(); autoNext(); return; }
+      if (e.key === 'Enter' && gWaiting) { e.preventDefault(); if (!e.repeat) autoNext(); return; }
 
       /* Escape : ferme modale ou l'ouvre si en jeu, gère aussi la modale de confirmation */
       if (document.getElementById('quit-modal').classList.contains('open')) {
