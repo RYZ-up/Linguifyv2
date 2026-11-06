@@ -2085,16 +2085,17 @@
     }
 
     /* ════════ Record card dans results ════════ */
+    /* Sous le score, dans le flux : ne recouvre plus rien sur la carte */
     .res-record-card {
       display: none;
-      position: absolute;
-      top: 1.1rem;
-      right: 1.2rem;
-      z-index: 10;
+      margin: .2rem auto 1.2rem;
     }
 
     .res-record-card.v {
-      display: block;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: .5rem;
     }
 
     @media (max-width: 480px) {
@@ -4452,6 +4453,7 @@
         gChecking = null;
         if (gSessionId !== sessionId || gEnding) return;
       } else checked.catch(() => {});
+      const prevStreak = gStreak;
       if (ok) {
         gCorrect++;
         gScore += window.answerCheck.questionScore(phrase.level, ms);
@@ -4473,7 +4475,7 @@
         card.classList.add('pop-ok');
         haptic(effectiveStreak >= 4 ? [18, 40, 30] : 14);
         showGameMascot(effectiveStreak >= 3 ? 'sleep' : 'love');
-        showAnswerNotif(true);
+        showAnswerNotif(true, effectiveStreak);
         updateStreakMul();
         cardAnim([{ transform: 'scale(1)' }, { transform: 'scale(1.05)', offset: .4 }, { transform: 'scale(1)' }], 260, 'ease-out');
         gWaiting = true;
@@ -4487,7 +4489,7 @@
         ptxt.innerHTML = `<div class="p-en">${escHtml(phrase.en)}</div><div class="p-wrong">${escHtml(raw)}</div><div class="p-correct"><i class="fa-solid fa-arrow-right" style="color:#4ade80;font-size:.75em"></i>${escHtml(phrase.expected || '')}</div>`;
         const wrap = document.getElementById('ans-input').closest('.inp3d');
         wrap.classList.remove('shake'); void wrap.offsetWidth; wrap.classList.add('shake');
-        showAnswerNotif(false);
+        showAnswerNotif(false, 0, prevStreak);
         updateStreakMul();
         gWaiting = false;
         nextDelayTimer = setTimeout(() => {
@@ -4607,15 +4609,24 @@
       }
     }
 
-    let notifTimer = null;
-    function showAnswerNotif(ok) {
+    let notifTimer = null, lastNotif = '';
+    const NOTIF_OK = ['Bravo !', 'Parfait !', 'Bien joué !', 'Excellent !', 'Top !', 'Impeccable !', 'Génial !', 'Super !', 'Exact !', 'Nickel !', 'Chapeau !', 'Trop fort !'];
+    const NOTIF_KO = ['Raté !', 'Presque !', 'Pas tout à fait…', 'Oups !', 'Dommage !', 'Loupé !', 'Pas cette fois !', 'On y était presque !', 'Encore un effort !'];
+    function showAnswerNotif(ok, streak = 0, lost = 0) {
       const n = document.getElementById('notif-ok');
       n.classList.remove('show', 'ok', 'ko');
       void n.offsetWidth;
       n.classList.add('show', ok ? 'ok' : 'ko');
-      n.querySelector('.nf-txt').innerHTML = ok
-        ? 'Bravo !'
-        : 'Raté !';
+      // Mots selon la série : plus elle est longue, plus ça s'emballe ; une longue série cassée est signalée
+      const words = ok
+        ? (streak >= 10 ? ['Légendaire !', 'Inarrêtable !', 'Machine !', `Série de ${streak} !`]
+          : streak >= 5 ? ['En feu !', 'Quelle série !', 'Tu cartonnes !', `${streak} d'affilée !`]
+          : streak >= 3 ? ["Ça s'enchaîne !", 'En rythme !', 'Continue !', `${streak} d'affilée !`]
+          : NOTIF_OK)
+        : (lost >= 3 ? ['Série cassée !', `Fin de série (${lost})`, 'Aïe, la série !'] : NOTIF_KO);
+      let w; do { w = words[Math.floor(Math.random() * words.length)]; } while (w === lastNotif && words.length > 1);
+      lastNotif = w;
+      n.querySelector('.nf-txt').textContent = w;
       clearTimeout(notifTimer);
       notifTimer = setTimeout(() => n.classList.remove('show'), 1400);
     }
