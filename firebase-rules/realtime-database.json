@@ -1,0 +1,105 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "leaderboard": {
+      ".read": "auth != null",
+      ".indexOn": [
+        "total",
+        "best",
+        "expiresAt",
+        "guest"
+      ]
+    },
+    "weekly": {
+      "$week": {
+        ".indexOn": [
+          "total",
+          "best",
+          "expiresAt"
+        ]
+      }
+    },
+    "users": {
+      "$uid": {
+        "best": {
+          ".read": "auth != null && auth.uid === $uid"
+        },
+        "history": {
+          ".read": "auth != null && auth.uid === $uid"
+        },
+        "total": {
+          ".read": "auth != null && auth.uid === $uid"
+        },
+        "profile": {
+          ".read": "auth != null && auth.uid === $uid"
+        },
+        "secureGame": {
+          ".read": "auth != null && auth.uid === $uid"
+        },
+        "settings": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid && auth.token.firebase.sign_in_provider !== 'anonymous'",
+          ".validate": "newData.hasChildren(['mode', 'direction', 'level', 'count', 'duration'])",
+          "mode": {
+            ".validate": "newData.val() === 'count' || newData.val() === 'time'"
+          },
+          "direction": {
+            ".validate": "newData.val() === 'en-fr' || newData.val() === 'fr-en'"
+          },
+          "level": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5 && newData.val() % 1 === 0"
+          },
+          "count": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 50 && newData.val() % 1 === 0"
+          },
+          "duration": {
+            ".validate": "newData.isNumber() && newData.val() >= 20 && newData.val() <= 1800 && newData.val() % 1 === 0"
+          },
+          "durationUnit": {
+            ".validate": "newData.val() === 'sec' || newData.val() === 'min'"
+          },
+          "soundVolume": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+          },
+          "themeColor": {
+            ".validate": "newData.isString() && newData.val().matches(/^#[0-9a-fA-F]{6}$/)"
+          },
+          "blurTimer": {
+            ".validate": "newData.isBoolean()"
+          },
+          "sound": {
+            ".validate": "newData.isBoolean()"
+          },
+          "liveHints": {
+            ".validate": "newData.isBoolean()"
+          },
+          "looseCorrection": {
+            ".validate": "newData.isBoolean()"
+          },
+          "showProgress": {
+            ".validate": "newData.isBoolean()"
+          },
+          "autoNext": {
+            ".validate": "newData.isBoolean()"
+          },
+          "animations": {
+            ".validate": "newData.isBoolean()"
+          },
+          "freezeBg": {
+            ".validate": "newData.isBoolean()"
+          },
+          "streakShake": {
+            ".validate": "newData.isBoolean()"
+          },
+          "streakMul": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    }
+  }
+}

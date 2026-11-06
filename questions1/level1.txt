@@ -1,0 +1,10 @@
+le chien|dog
+la maison|house
+rouge|red
+manger|to eat
+le livre|book
+Bonjour !|Hello!
+Je suis fatigué.|I am tired.
+Le chat dort.|The cat sleeps.
+Nous aimons la musique.|We like music.
+Il fait froid.|It is cold.
